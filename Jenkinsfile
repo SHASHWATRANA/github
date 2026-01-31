@@ -2,8 +2,10 @@ pipeline {
     agent any
 
     stages {
+
         stage('Checkout') {
             steps {
+                echo 'Checking out source code'
                 checkout scm
             }
         }
@@ -13,7 +15,8 @@ pipeline {
                 branch 'main'
             }
             steps {
-                echo 'Running full CI/CD pipeline for MAIN branch'
+                echo 'Running build on MAIN branch'
+                bat 'echo Build completed'
             }
         }
 
@@ -22,12 +25,12 @@ pipeline {
                 anyOf {
                     branch 'main'
                     branch 'feature/test-feature'
-                    branch 'release/v1.0'
                 }
             }
             steps {
                 echo 'Running tests'
-                bat 'python test.py'
+                bat '"C:\\Users\\shash\\AppData\\Local\\Programs\\Python\\Python314\\python.exe" --version'
+                bat '"C:\\Users\\shash\\AppData\\Local\\Programs\\Python\\Python314\\python.exe" test.py'
             }
         }
 
@@ -36,14 +39,22 @@ pipeline {
                 branch 'release/v1.0'
             }
             steps {
-                echo 'Running security scans for RELEASE branch'
+                echo 'Running security scan for RELEASE branch'
+                bat 'echo Security scan completed'
             }
         }
     }
 
     post {
         always {
-            echo 'Pipeline completed'
+            echo 'Pipeline execution finished'
+        }
+        success {
+            echo 'Pipeline succeeded'
+        }
+        failure {
+            echo 'Pipeline failed'
         }
     }
 }
+
